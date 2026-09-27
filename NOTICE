@@ -1,0 +1,29 @@
+OMIMyMCP - Server MCP per le quotazioni immobiliari OMI
+Copyright 2026 Explobot
+
+Progetto originale: https://github.com/Explo-bot/OMIMyMCP
+
+Questo prodotto include software sviluppato da Explobot (https://github.com/Explo-bot/OMIMyMCP),
+distribuito con licenza Apache License, Version 2.0.
+
+Chi ridistribuisce questo software o opere derivate deve riportare il presente
+avviso, inclusi il nome dell'autore originale e il link al progetto originale,
+come previsto dalla sezione 4(d) della licenza.
+
+--------------------------------------------------------------------------------
+Dati
+
+I dati delle quotazioni immobiliari e dei perimetri delle zone OMI, e il database
+da essi derivato, NON sono coperti da questa licenza.
+Fonte dei dati: Agenzia Entrate - OMI. Sono soggetti alle condizioni d'uso
+dell'Agenzia delle Entrate:
+https://www.agenziaentrate.gov.it/portale/schede/fabbricatiterreni/omi/banche-dati/quotazioni-immobiliari/condizioni-contrattuali-qi
+
+--------------------------------------------------------------------------------
+Componenti di terze parti
+
+- Microsoft.Data.Sqlite (licenza MIT) - https://github.com/dotnet/efcore
+- SQLite (pubblico dominio) - https://sqlite.org
+- SDK C# del Model Context Protocol (ModelContextProtocol, ModelContextProtocol.AspNetCore)
+  https://github.com/modelcontextprotocol/csharp-sdk - vedere la licenza nel repository
+- .NET / ASP.NET Core (licenza MIT) - https://github.com/dotnet

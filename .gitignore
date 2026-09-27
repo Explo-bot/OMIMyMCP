@@ -1,0 +1,16 @@
+# Build
+bin/
+obj/
+*.user
+.vs/
+
+# Forniture OMI originali: il nome contiene il codice fiscale del richiedente
+*.zip
+
+# Database prodotto da OMIMyMCP: contiene dati dell'Agenzia delle Entrate, non va pubblicato
+*.db
+*.db-shm
+*.db-wal
+
+# Log del server (/l): contiene IP e richieste dei client
+*.log
