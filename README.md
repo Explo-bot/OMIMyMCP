@@ -103,17 +103,17 @@ Per l'avvio automatico come servizio vedere [Installazione come servizio](#insta
 ```
 Cargo.toml, Cargo.lock, .cargo/config.toml    workspace Rust (3 crate)
 crates/
-  omi-core/        libreria: database, geometria, testo, import, logica degli strumenti MCP; test e risultati di riferimento
+  omi-core/        libreria: database, geometria, testo, import, logica degli strumenti MCP; test e risultati di riferimento (tests/golden)
   omi-import/      programma omi-import
   omi-mcp/         programma omi-mcp (server e servizio Windows)
 deploy/
-  windows/         script PowerShell: install, uninstall, aggiorna-dati, install-caddy, build-release, test-servizio, verifica-residui
+  windows/         script PowerShell: install, uninstall, aggiorna-dati, install-caddy, build-release, test-servizio, verifica-residui; LEGGIMI.md
   linux/           script bash: install, uninstall, aggiorna-dati, install-caddy, build-release, test-servizio; unità systemd di esempio
   caddy/           Caddyfile di esempio (Internet e rete locale) e guida
 docs/
   MANUALE_TECNICO.md   manuale completo (16 capitoli e 3 appendici)
 release/
-  windows-x64/     pacchetto Windows già compilato, con script e istruzioni (LEGGIMI.md)
+  windows-x64/     pacchetto Windows già compilato (omi-import.exe, omi-mcp.exe, SHA256SUMS.txt), con script e istruzioni (LEGGIMI.md)
 LICENSE, NOTICE    licenza Apache-2.0 e avvisi (da conservare se si ridistribuisce)
 ```
 
@@ -252,7 +252,7 @@ OMI_PROVA_DB=percorso/omi.db cargo test --release -p omi-mcp --test prestazioni 
 | Sistema | Comando | Risultato |
 |---|---|---|
 | Windows | `.\deploy\windows\build-release.ps1` | `dist\OMIMyMCP-rs-<versione>-win-x64.zip` + `dist\SHA256SUMS.txt` (test, compilazione con target MSVC, pacchetto; `-SkipTests`, `-OutDir`, `-CertThumbprint` per la firma, `-WhatIf`) |
-| Linux | `./deploy/linux/build-release.sh` | `dist/OMIMyMCP-rs-<versione>-linux-x64.tar.gz` + `dist/SHA256SUMS-linux.txt` (`--skip-tests`, `--out-dir`, `--target`) |
+| Linux | `./deploy/linux/build-release.sh` | `dist/OMIMyMCP-rs-<versione>-linux-<arch>.tar.gz` (`<arch>` = `x64` o `arm64`, secondo la macchina o il `--target`) + `dist/SHA256SUMS-linux.txt` (`--skip-tests`, `--out-dir`, `--target`) |
 
 ## Versione compilata per Windows
 
