@@ -1,0 +1,1 @@
+Semestre non valido: '2025/3'. Usare il formato AAAA/S, es. 2025/1.

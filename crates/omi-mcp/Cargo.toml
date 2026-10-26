@@ -1,0 +1,35 @@
+[package]
+name = "omi-mcp"
+description = "Server MCP sulle quotazioni immobiliari OMI"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+axum.workspace = true
+chrono.workspace = true
+omi-core.workspace = true
+rmcp = { workspace = true, features = ["server", "macros", "transport-streamable-http-server"] }
+schemars.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+socket2.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "net", "signal", "sync", "time"] }
+tokio-util.workspace = true
+tower-http = { workspace = true, features = ["limit", "timeout"] }
+
+[dev-dependencies]
+assert_cmd.workspace = true
+regex.workspace = true
+reqwest.workspace = true
+rmcp = { workspace = true, features = ["client", "transport-streamable-http-client-reqwest"] }
+tempfile.workspace = true
+zip.workspace = true
+
+[target."cfg(windows)".dependencies]
+windows-service.workspace = true
+windows-sys = { workspace = true, features = ["Win32_Foundation", "Win32_System_Services"] }

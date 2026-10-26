@@ -1,0 +1,52 @@
+# OMIMyMCP-rs - Copyright 2026 Explobot
+# SPDX-License-Identifier: Apache-2.0
+#
+# Caddy come reverse proxy HTTPS davanti a omi-mcp, per la rete locale: nessun dominio pubblico,
+# certificato emesso dalla CA locale di Caddy (tls internal).
+#
+# I client devono considerare attendibile la CA locale di Caddy: sulla macchina di Caddy `caddy trust`
+# la installa nell'archivio di sistema; sugli altri PC si importa il certificato radice, che si trova in
+# <cartella dei dati>/pki/authorities/local/root.crt. Un connettore di claude.ai NON funziona con questo
+# certificato: serve il Caddyfile.internet.example.
+#
+# Il servizio OMIMyMCP va installato con --bind 127.0.0.1 --trust-proxy e senza --firewall.
+# Per le prove, al posto di omi.lan si può usare localhost.
+{
+	# certificati e stato in una cartella fissa (il servizio gira come LocalSystem)
+	storage file_system C:/ProgramData/Caddy/data
+
+	# decommentare per non far installare a Caddy la CA locale nell'archivio di sistema all'avvio
+	# skip_install_trust
+}
+
+omi.lan {
+	tls internal
+	encode zstd gzip
+
+	request_body {
+		max_size 1MB
+	}
+
+	handle /mcp* {
+		reverse_proxy 127.0.0.1:8765 {
+			flush_interval -1 # niente buffering: necessario per le risposte in streaming (SSE)
+			transport http {
+				read_timeout 5m
+			}
+		}
+	}
+	handle /health {
+		reverse_proxy 127.0.0.1:8765
+	}
+	handle {
+		respond "OMIMyMCP - endpoint /mcp" 200
+	}
+
+	log {
+		output file C:/ProgramData/Caddy/logs/omi-access.log {
+			roll_size 10MiB
+			roll_keep 10
+		}
+		format json
+	}
+}

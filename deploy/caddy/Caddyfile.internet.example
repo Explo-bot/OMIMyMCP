@@ -1,0 +1,47 @@
+# OMIMyMCP-rs - Copyright 2026 Explobot
+# SPDX-License-Identifier: Apache-2.0
+#
+# Caddy come reverse proxy HTTPS davanti a omi-mcp, per un dominio pubblico (Let's Encrypt automatico).
+# Variabili d'ambiente: OMI_DOMINIO (es. omi.esempio.it) e OMI_ACME_EMAIL (contatto per Let's Encrypt).
+# Il servizio OMIMyMCP va installato con --bind 127.0.0.1 --trust-proxy e senza --firewall.
+{
+	# certificati e stato in una cartella fissa (il servizio gira come LocalSystem)
+	storage file_system C:/ProgramData/Caddy/data
+	email {$OMI_ACME_EMAIL}
+}
+
+{$OMI_DOMINIO} {
+	encode zstd gzip
+
+	# facoltativo: limitare l'accesso agli IP noti. Il traffico dei connettori di claude.ai parte da
+	# 160.79.104.0/21 (verificato il 25/10/2026, vedi LEGGIMI.md): aggiungere anche i propri IP per le prove.
+	# @esterni not remote_ip 160.79.104.0/21 203.0.113.7/32
+	# respond @esterni 403
+
+	request_body {
+		max_size 1MB
+	}
+
+	handle /mcp* {
+		reverse_proxy 127.0.0.1:8765 {
+			flush_interval -1 # niente buffering: necessario per le risposte in streaming (SSE)
+			transport http {
+				read_timeout 5m
+			}
+		}
+	}
+	handle /health {
+		reverse_proxy 127.0.0.1:8765
+	}
+	handle {
+		respond "OMIMyMCP - endpoint /mcp" 200
+	}
+
+	log {
+		output file C:/ProgramData/Caddy/logs/omi-access.log {
+			roll_size 10MiB
+			roll_keep 10
+		}
+		format json
+	}
+}

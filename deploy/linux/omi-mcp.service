@@ -1,0 +1,36 @@
+# OMIMyMCP-rs - Copyright 2026 Explobot
+# SPDX-License-Identifier: Apache-2.0
+#
+# Unità systemd per omi-mcp, modello per l'installazione manuale. Di norma conviene usare
+# deploy/linux/install.sh, che crea utente, cartelle e unità con le opzioni scelte.
+# Installazione manuale (come root):
+#   useradd --system --home-dir /var/lib/omimymcp --shell /usr/sbin/nologin omi
+#   install -d -o omi -g omi /var/lib/omimymcp
+#   install -D -m 755 omi-mcp omi-import -t /opt/omimymcp/
+#   sudo -u omi /opt/omimymcp/omi-import /var/lib/omimymcp/omi.db /percorso/QI*.zip
+#   cp omi-mcp.service /etc/systemd/system/ && systemctl daemon-reload
+#   systemctl enable --now omi-mcp
+# Log del ciclo di vita: journalctl -u omi-mcp. Con --log le righe HTTP e TOOL vanno anche in
+# /var/lib/omimymcp/omi.log. Per il token: aggiungere --token-file /var/lib/omimymcp/token.txt.
+
+[Unit]
+Description=OMIMyMCP - Server MCP quotazioni OMI
+Documentation=file:///opt/omimymcp/MANUALE_TECNICO.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=omi
+Group=omi
+ExecStart=/opt/omimymcp/omi-mcp /var/lib/omimymcp/omi.db 8765 --bind 127.0.0.1
+Restart=on-failure
+RestartSec=5
+ProtectSystem=strict
+ReadWritePaths=/var/lib/omimymcp
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
